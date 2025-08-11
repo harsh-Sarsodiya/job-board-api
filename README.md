@@ -6,6 +6,63 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
+# Job Board API
+
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-orange.svg)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1%2B-blue.svg)](https://php.net)
+
+A RESTful API for job posting and applications with role-based authentication.
+
+## 📌 Features
+
+- **User Roles**
+  - Employers: Create/manage jobs
+  - Candidates: Apply to jobs
+  - Admins: Approve/reject jobs
+
+- **Core Functionality**
+  - JWT Authentication (Sanctum)
+  - Job CRUD operations
+  - Application management
+  - Automated job expiration
+
+## 🚀 API Endpoints
+
+### Authentication
+| Endpoint          | Method | Description                |
+|-------------------|--------|----------------------------|
+| `/register`       | POST   | Register new user          |
+| `/login`          | POST   | Get access token           |
+| `/logout`         | POST   | Invalidate token           |
+
+### Jobs
+| Endpoint                | Method | Role Access   |
+|-------------------------|--------|---------------|
+| `/jobs`                 | GET    | Public        |
+| `/jobs`                 | POST   | Employer      |
+| `/jobs/{id}`            | GET    | Public        |
+| `/my-jobs`              | GET    | Employer      |
+| `/pending-jobs`         | GET    | Admin         |
+| `/jobs/{id}/status`     | POST   | Admin         |
+
+### Applications
+| Endpoint                     | Method | Role Access   |
+|------------------------------|--------|---------------|
+| `/applications`              | POST   | Candidate     |
+| `/applications?job_id={id}`  | GET    | Employer      |
+| `/applications/{id}/status`  | POST   | Employer      |
+
+## 🛠️ Setup
+
+### Prerequisites
+- PHP 8.1+
+- Composer
+- MySQL 5.7+
+
+### Installation
+1. Clone repository:
+   ```bash
+   git clone https://github.com/yourusername/job-board-api.git
 
 ## About Laravel
 
