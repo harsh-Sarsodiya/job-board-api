@@ -62,7 +62,7 @@ A RESTful API for job posting and applications with role-based authentication.
 ### Installation
 1. Clone repository:
    ```bash
-   git clone https://github.com/yourusername/job-board-api.git
+   git clone https://github.com/harsh-Sarsodiya/job-board-api.git
 
 ## About Laravel
 
