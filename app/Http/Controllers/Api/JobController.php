@@ -12,9 +12,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class JobController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private JobService $jobService
     ) {
@@ -85,6 +89,13 @@ class JobController extends Controller
 
     public function updateStatus(Job $job, JobStatusRequest $request): JsonResponse
     {
+            // Debug the user's role and ID
+    // \Log::debug('User attempting status update', [
+    //     'user_id' => $request->user()->id,
+    //     'role' => $request->user()->role,
+    //     'job_owner' => $job->user_id
+    // ]);
+
         $this->authorize('updateStatus', $job);
 
         $this->jobService->updateJobStatus($job->id, $request->status);

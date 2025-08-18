@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Job;
+use App\Policies\JobPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Job::class => JobPolicy::class,
     ];
 
     /**
@@ -23,8 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Admins bypass all permission checks
         Gate::before(function ($user, $ability) {
-            return $user->isAdmin() ?? null;
+            return $user->isAdmin() ? true : null;
         });
     }
 }

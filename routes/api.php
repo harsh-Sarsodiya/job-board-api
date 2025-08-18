@@ -24,7 +24,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/my-jobs', [JobController::class, 'myJobs']);
 
         // Admin job routes
-        Route::middleware('can:viewAny,App\Models\Job')->group(function () {
+        Route::middleware('can:updateStatus,job')->group(function() {
             Route::get('/pending-jobs', [JobController::class, 'pendingJobs']);
             Route::post('/jobs/{job}/status', [JobController::class, 'updateStatus']);
         });
