@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JobTest extends TestCase
 {
@@ -18,14 +19,17 @@ class JobTest extends TestCase
 
         $employer = User::factory()->create(['role' => 'employer']);
 
-        $response = $this->actingAs($employer)
-            ->postJson('/api/v1/jobs', [
-                'title' => 'Software Engineer',
-                'description' => 'We are looking for a skilled software engineer.',
-                'type' => 'full-time',
-                'salary' => 80000,
-                'expiration_date' => now()->addMonth()->format('Y-m-d'),
-            ]);
+        $token = JWTAuth::fromUser($employer);
+
+        $response = $this->postJson('/api/v1/jobs', [
+            'title' => 'Software Engineer',
+            'description' => 'We are looking for a skilled software engineer.',
+            'type' => 'full-time',
+            'salary' => 80000,
+            'expiration_date' => now()->addMonth()->format('Y-m-d'),
+        ], [
+            'Authorization' => "Bearer $token"
+        ]);
 
         $response->assertStatus(201)
             ->assertJson([
@@ -81,14 +85,17 @@ class JobTest extends TestCase
     {
         $candidate = User::factory()->create(['role' => 'candidate']);
 
-        $response = $this->actingAs($candidate)
-            ->postJson('/api/v1/jobs', [
-                'title' => 'Software Engineer',
-                'description' => 'We are looking for a skilled software engineer.',
-                'type' => 'full-time',
-                'salary' => 80000,
-                'expiration_date' => now()->addMonth()->format('Y-m-d'),
-            ]);
+        $token = JWTAuth::fromUser($candidate);
+
+        $response = $this->postJson('/api/v1/jobs', [
+            'title' => 'Software Engineer',
+            'description' => 'We are looking for a skilled software engineer.',
+            'type' => 'full-time',
+            'salary' => 80000,
+            'expiration_date' => now()->addMonth()->format('Y-m-d'),
+        ], [
+            'Authorization' => "Bearer $token"
+        ]);
 
         $response->assertStatus(403);
     }

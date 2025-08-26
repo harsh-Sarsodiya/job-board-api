@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ApplicationTest extends TestCase
 {
@@ -26,11 +27,14 @@ class ApplicationTest extends TestCase
             'expiration_date' => now()->addWeek(),
         ]);
 
-        $response = $this->actingAs($candidate)
-            ->postJson('/api/v1/applications', [
-                'job_id' => $job->id,
-                'message' => 'I am interested in this position.',
-            ]);
+        $token = JWTAuth::fromUser($candidate);
+
+        $response = $this->postJson('/api/v1/applications', [
+            'job_id' => $job->id,
+            'message' => 'I am interested in this position.',
+        ], [
+            'Authorization' => "Bearer $token"
+        ]);
 
         $response->assertStatus(201)
             ->assertJson([
@@ -68,10 +72,13 @@ class ApplicationTest extends TestCase
             'status' => 'pending',
         ]);
 
-        $response = $this->actingAs($employer)
-            ->postJson("/api/v1/applications/{$application->id}/status", [
-                'status' => 'accepted',
-            ]);
+        $token = JWTAuth::fromUser($employer);
+
+        $response = $this->postJson("/api/v1/applications/{$application->id}/status", [
+            'status' => 'accepted',
+        ], [
+            'Authorization' => "Bearer $token"
+        ]);
 
         $response->assertStatus(200)
             ->assertJson([
