@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\ApplicationRepositoryInterface;
 use App\Models\Application;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ApplicationService
 {
@@ -13,9 +13,9 @@ class ApplicationService
     ) {
     }
 
-    public function getAllApplications(): LengthAwarePaginator
+    public function getAllApplications(int $perPage = 10): Paginator
     {
-        return $this->applicationRepository->all();
+        return $this->applicationRepository->all($perPage);
     }
 
     public function getApplicationById(int $id): ?Application
@@ -38,14 +38,14 @@ class ApplicationService
         return $this->applicationRepository->delete($id);
     }
 
-    public function getJobApplications(int $jobId): LengthAwarePaginator
+    public function getJobApplications(int $jobId, int $perPage = 10): Paginator
     {
-        return $this->applicationRepository->getJobApplications($jobId);
+        return $this->applicationRepository->getJobApplications($jobId, $perPage);
     }
 
-    public function getUserApplications(int $userId): LengthAwarePaginator
+    public function getUserApplications(int $userId, int $perPage = 10): Paginator
     {
-        return $this->applicationRepository->getUserApplications($userId);
+        return $this->applicationRepository->getUserApplications($userId, $perPage);
     }
 
     public function updateApplicationStatus(int $id, string $status): bool

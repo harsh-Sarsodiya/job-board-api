@@ -4,13 +4,13 @@ namespace App\Repositories;
 
 use App\Interfaces\ApplicationRepositoryInterface;
 use App\Models\Application;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ApplicationRepository implements ApplicationRepositoryInterface
 {
-    public function all(): LengthAwarePaginator
+    public function all(int $perPage = 10): Paginator
     {
-        return Application::with(['job', 'user'])->paginate(10);
+        return Application::with(['job', 'user'])->paginate($perPage);
     }
 
     public function find(int $id): ?Application
@@ -37,18 +37,18 @@ class ApplicationRepository implements ApplicationRepositoryInterface
         return Application::destroy($id) > 0;
     }
 
-    public function getJobApplications(int $jobId): LengthAwarePaginator
+    public function getJobApplications(int $jobId, int $perPage = 10): Paginator
     {
         return Application::where('job_id', $jobId)
             ->with(['job', 'user'])
-            ->paginate(10);
+            ->paginate($perPage);
     }
 
-    public function getUserApplications(int $userId): LengthAwarePaginator
+    public function getUserApplications(int $userId, int $perPage = 10): Paginator
     {
         return Application::where('user_id', $userId)
             ->with(['job', 'user'])
-            ->paginate(10);
+            ->paginate($perPage);
     }
 
     public function updateApplicationStatus(int $id, string $status): bool

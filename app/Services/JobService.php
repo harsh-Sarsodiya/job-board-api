@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Interfaces\JobRepositoryInterface;
 use App\Models\Job;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class JobService
 {
@@ -13,14 +13,14 @@ class JobService
     ) {
     }
 
-    public function getAllJobs(): LengthAwarePaginator
+    public function getAllJobs(int $perPage = 10): Paginator
     {
-        return $this->jobRepository->all();
+        return $this->jobRepository->all($perPage);
     }
 
-    public function getActiveJobs(): LengthAwarePaginator
+    public function getActiveJobs(int $perPage = 10): Paginator
     {
-        return $this->jobRepository->getActiveJobs();
+        return $this->jobRepository->getActiveJobs($perPage);
     }
 
     public function getJobById(int $id): ?Job
@@ -43,14 +43,14 @@ class JobService
         return $this->jobRepository->delete($id);
     }
 
-    public function getEmployerJobs(int $employerId): LengthAwarePaginator
+    public function getEmployerJobs(int $employerId, int $perPage = 10): Paginator
     {
-        return $this->jobRepository->getEmployerJobs($employerId);
+        return $this->jobRepository->getEmployerJobs($employerId, $perPage);
     }
 
-    public function getPendingJobs(): LengthAwarePaginator
+    public function getPendingJobs(int $perPage = 10): Paginator
     {
-        return $this->jobRepository->getPendingJobs();
+        return $this->jobRepository->getPendingJobs($perPage);
     }
 
     public function updateJobStatus(int $id, string $status): bool

@@ -4,13 +4,13 @@ namespace App\Repositories;
 
 use App\Interfaces\JobRepositoryInterface;
 use App\Models\Job;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class JobRepository implements JobRepositoryInterface
 {
-    public function all(): LengthAwarePaginator
+    public function all(int $perPage = 10): Paginator
     {
-        return Job::with('user')->paginate(10);
+        return Job::with('user')->paginate($perPage);
     }
 
     public function find(int $id): ?Job
@@ -37,24 +37,26 @@ class JobRepository implements JobRepositoryInterface
         return Job::destroy($id) > 0;
     }
 
-    public function getActiveJobs(): LengthAwarePaginator
+    public function getActiveJobs(int $perPage = 10): Paginator
     {
-        return Job::active()->with('user')->paginate(10);
+        return Job::active()->with('user')->paginate($perPage);
     }
 
-    public function getEmployerJobs(int $employerId): LengthAwarePaginator
+    public function getEmployerJobs(int $employerId, int $perPage = 10): Paginator
     {
-        return Job::where('user_id', $employerId)->with('user')->paginate(10);
+        return Job::where('user_id', $employerId)
+            ->with('user')
+            ->paginate($perPage);
     }
 
-    public function getPendingJobs(): LengthAwarePaginator
+    public function getPendingJobs(int $perPage = 10): Paginator
     {
-        return Job::pending()->with('user')->paginate(10);
+        return Job::pending()->with('user')->paginate($perPage);
     }
 
-    public function getExpiredJobs(): LengthAwarePaginator
+    public function getExpiredJobs(int $perPage = 10): Paginator
     {
-        return Job::expired()->with('user')->paginate(10);
+        return Job::expired()->with('user')->paginate($perPage);
     }
 
     public function updateStatus(int $id, string $status): bool
